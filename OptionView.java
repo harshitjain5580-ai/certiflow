@@ -1,21 +1,5 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javafx.geometry.Insets
- *  javafx.geometry.Pos
- *  javafx.scene.Node
- *  javafx.scene.control.Button
- *  javafx.scene.control.Label
- *  javafx.scene.image.Image
- *  javafx.scene.image.ImageView
- *  javafx.scene.layout.HBox
- *  javafx.scene.layout.VBox
- */
 package com.certiflow;
 
-import com.certiflow.App;
-import java.io.InputStream;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -24,66 +8,114 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import java.io.InputStream;
 
 public class OptionView {
-    private VBox view = new VBox(40.0);
+    private HBox view = new HBox();
 
     public OptionView() {
-        Label titleNode;
+        this.view.getStyleClass().add("desktop-root");
         this.view.setAlignment(Pos.CENTER);
-        this.view.getStyleClass().add((Object)"option-bg");
-        VBox titleBox = new VBox(10.0);
-        titleBox.setAlignment(Pos.CENTER);
+
+        // --- Left Section: Branding & Hero ---
+        VBox leftSection = new VBox(30);
+        leftSection.setAlignment(Pos.CENTER);
+        leftSection.setStyle("-fx-background-color: linear-gradient(to bottom right, #1a1a1a, #0a0a0a); -fx-padding: 60px;");
+        HBox.setHgrow(leftSection, Priority.ALWAYS);
+
         InputStream logoStream = this.getClass().getResourceAsStream("/logo.png");
         if (logoStream != null) {
             ImageView logoView = new ImageView(new Image(logoStream));
-            logoView.setFitWidth(300.0);
+            logoView.setFitWidth(350);
             logoView.setPreserveRatio(true);
-            titleNode = logoView;
+            leftSection.getChildren().add(logoView);
         } else {
-            Label title = new Label("Certiflow");
-            title.getStyleClass().add((Object)"main-title");
-            titleNode = title;
+            Label title = new Label("CERTIFLOW");
+            title.setStyle("-fx-text-fill: #eab308; -fx-font-size: 64px; -fx-font-weight: 900; -fx-letter-spacing: 5px;");
+            leftSection.getChildren().add(title);
         }
-        Label subtitle = new Label("Please select your role");
-        subtitle.getStyleClass().add((Object)"sub-title");
-        titleBox.getChildren().addAll((Object[])new Node[]{titleNode, subtitle});
-        VBox buttonBox = new VBox(20.0);
-        buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.setMaxWidth(380.0);
-        buttonBox.setPadding(new Insets(30.0));
-        buttonBox.getStyleClass().add((Object)"button-container");
-        buttonBox.getChildren().add((Object)this.createRoleButton("Student", "\ud83c\udf93"));
-        buttonBox.getChildren().add((Object)this.createRoleButton("Teacher", "\ud83d\udcda"));
-        buttonBox.getChildren().add((Object)this.createRoleButton("Admin", "\ud83d\udee1\ufe0f"));
-        HBox secureBox = new HBox(8.0);
-        secureBox.setAlignment(Pos.CENTER);
-        Label lockIcon = new Label("\ud83d\udd12");
-        lockIcon.getStyleClass().add((Object)"secure-icon");
-        Label secureText = new Label("Secure Access");
-        secureText.getStyleClass().add((Object)"secure-text");
-        secureBox.getChildren().addAll((Object[])new Node[]{lockIcon, secureText});
-        this.view.getChildren().addAll((Object[])new Node[]{titleBox, buttonBox, secureBox});
+
+        Label moto = new Label("Sovereign Digital Credential Infrastructure");
+        moto.setStyle("-fx-text-fill: #64748b; -fx-font-size: 18px; -fx-font-weight: bold; -fx-letter-spacing: 2px;");
+        
+        Label desc = new Label("Securely manage, verify, and audit institutional certifications with post-quantum encryption protocols.");
+        desc.setStyle("-fx-text-fill: #444; -fx-font-size: 14px; -fx-max-width: 500px; -fx-text-alignment: center;");
+        desc.setWrapText(true);
+
+        leftSection.getChildren().addAll(moto, desc);
+
+        // --- Right Section: Role Selection ---
+        VBox rightSection = new VBox(40);
+        rightSection.setAlignment(Pos.CENTER);
+        rightSection.setStyle("-fx-background-color: #0a0a0a; -fx-padding: 80px; -fx-min-width: 500px;");
+        
+        VBox header = new VBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        Label welcome = new Label("Welcome to the Vault");
+        welcome.setStyle("-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;");
+        Label subWelcome = new Label("Please select your access tier to continue.");
+        subWelcome.setStyle("-fx-text-fill: #64748b; -fx-font-size: 16px;");
+        header.getChildren().addAll(welcome, subWelcome);
+
+        VBox buttonBox = new VBox(15);
+        buttonBox.getChildren().addAll(
+            createDesktopRoleButton("Student Portal", "Access your verified credentials", "\ud83c\udf93"),
+            createDesktopRoleButton("Teacher Console", "Manage and validate requests", "\ud83d\udcda"),
+            createDesktopRoleButton("Admin Terminal", "System oversight and audit", "\ud83d\udee1\ufe0f")
+        );
+
+        HBox footer = new HBox(8);
+        footer.setAlignment(Pos.CENTER_LEFT);
+        Label lockIcon = new Label("\ud83d\udd12"); lockIcon.setStyle("-fx-text-fill: #eab308;");
+        Label secureText = new Label("Encrypted via Sovereign-X Cloud Protocol");
+        secureText.setStyle("-fx-text-fill: #334155; -fx-font-size: 12px; -fx-font-weight: bold;");
+        footer.getChildren().addAll(lockIcon, secureText);
+
+        rightSection.getChildren().addAll(header, buttonBox, footer);
+
+        this.view.getChildren().addAll(leftSection, rightSection);
     }
 
-    private Button createRoleButton(String text, String emojiStr) {
+    private Button createDesktopRoleButton(String title, String sub, String emoji) {
         Button btn = new Button();
-        btn.getStyleClass().add((Object)"role-button");
+        btn.getStyleClass().add("role-button-desktop"); // We will add this to CSS if needed, or style here
+        btn.setStyle("-fx-background-color: #1a1a1a; -fx-background-radius: 12px; -fx-padding: 20px; -fx-cursor: hand; -fx-border-color: #262626; -fx-border-radius: 12px;");
         btn.setMaxWidth(Double.MAX_VALUE);
-        HBox box = new HBox(15.0);
-        box.setAlignment(Pos.CENTER);
-        Label icon = new Label(emojiStr);
-        icon.getStyleClass().add((Object)"role-icon");
-        Label lbl = new Label(text.toUpperCase());
-        lbl.getStyleClass().add((Object)"role-text");
-        box.getChildren().addAll((Object[])new Node[]{icon, lbl});
-        btn.setGraphic((Node)box);
-        btn.setOnAction(e -> App.showLoginView(text, emojiStr));
+        
+        HBox content = new HBox(20);
+        content.setAlignment(Pos.CENTER_LEFT);
+        
+        Label icon = new Label(emoji);
+        icon.setStyle("-fx-font-size: 24px; -fx-text-fill: #eab308;");
+        
+        VBox texts = new VBox(2);
+        Label primary = new Label(title);
+        primary.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px;");
+        Label secondary = new Label(sub);
+        secondary.setStyle("-fx-text-fill: #64748b; -fx-font-size: 12px;");
+        texts.getChildren().addAll(primary, secondary);
+        
+        Region s = new Region(); HBox.setHgrow(s, Priority.ALWAYS);
+        Label arrow = new Label("\u276f"); arrow.setStyle("-fx-text-fill: #333;");
+        
+        content.getChildren().addAll(icon, texts, s, arrow);
+        btn.setGraphic(content);
+        
+        btn.setOnMouseEntered(e -> btn.setStyle("-fx-background-color: #222; -fx-background-radius: 12px; -fx-padding: 20px; -fx-cursor: hand; -fx-border-color: #eab308; -fx-border-radius: 12px;"));
+        btn.setOnMouseExited(e -> btn.setStyle("-fx-background-color: #1a1a1a; -fx-background-radius: 12px; -fx-padding: 20px; -fx-cursor: hand; -fx-border-color: #262626; -fx-border-radius: 12px;"));
+        
+        btn.setOnAction(e -> {
+            String role = title.contains("Student") ? "Student" : (title.contains("Teacher") ? "Teacher" : "Admin");
+            App.showLoginView(role, emoji);
+        });
+
         return btn;
     }
 
-    public VBox getView() {
+    public HBox getView() {
         return this.view;
     }
 }

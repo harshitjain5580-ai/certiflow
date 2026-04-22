@@ -1,83 +1,104 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javafx.geometry.Insets
- *  javafx.geometry.Pos
- *  javafx.scene.Cursor
- *  javafx.scene.Node
- *  javafx.scene.control.Button
- *  javafx.scene.control.Label
- *  javafx.scene.layout.HBox
- *  javafx.scene.layout.Priority
- *  javafx.scene.layout.Region
- *  javafx.scene.layout.VBox
- *  javafx.scene.text.TextAlignment
- */
 package com.certiflow;
 
-import com.certiflow.App;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
 import javafx.scene.text.TextAlignment;
 
 public class TeacherReportExportView {
-    private VBox view = new VBox();
+    private BorderPane view = new BorderPane();
 
     public TeacherReportExportView() {
-        this.view.setAlignment(Pos.CENTER);
-        this.view.getStyleClass().add((Object)"dashboard-bg");
-        VBox container = new VBox(30.0);
-        container.getStyleClass().add((Object)"dashboard-container");
-        container.setMaxWidth(480.0);
-        container.setPadding(new Insets(20.0));
-        HBox header = new HBox(12.0);
+        this.view.getStyleClass().add("desktop-root");
+
+        // --- Left Sidebar ---
+        VBox sidebar = new VBox(10);
+        sidebar.getStyleClass().add("sidebar");
+        Node brand = App.getSidebarBranding();
+        
+        VBox navItems = new VBox(5);
+        navItems.getChildren().addAll(
+            createSidebarItem("\ud83c\udfe0", "Home Overview", false, () -> App.showTeacherHome()),
+            createSidebarItem("\ud83d\udccb", "Pending Validations", false, () -> App.showTeacherDashboard()),
+            createSidebarItem("\u23f2", "Action History", false, () -> App.showTeacherHistory()),
+            createSidebarItem("\ud83d\udc65", "Student Roster", false, () -> App.showTeacherStudentList()),
+            createSidebarItem("\ud83d\udcac", "Direct Messaging", false, () -> App.showTeacherMessaging()),
+            createSidebarItem("\ud83d\udc64", "Teacher Profile", false, () -> App.showTeacherProfile())
+        );
+        Region sideSpacer = new Region(); VBox.setVgrow(sideSpacer, Priority.ALWAYS);
+        Label backBtn = new Label("\u2190 Back to Overview");
+        backBtn.setStyle("-fx-text-fill: " + App.getAccentColor() + "; -fx-font-weight: bold; -fx-cursor: hand;");
+        backBtn.setOnMouseClicked(e -> App.showTeacherHome());
+        sidebar.getChildren().addAll(brand, navItems, sideSpacer, backBtn);
+        this.view.setLeft(sidebar);
+
+        // --- Main Content ---
+        VBox mainContainer = new VBox(30);
+        mainContainer.getStyleClass().add("main-stage");
+        
+        HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
-        Label backIcon = new Label("\u2190");
-        backIcon.getStyleClass().add((Object)"teacher-back-btn");
-        backIcon.setCursor(Cursor.HAND);
-        backIcon.setOnMouseClicked(e -> App.showTeacherHome());
+        VBox titleBox = new VBox(2);
         Label title = new Label("Export Manager");
-        title.setStyle("-fx-text-fill: #fac736; -fx-font-size: 20px; -fx-font-weight: bold;");
-        Region spacer = new Region();
-        HBox.setHgrow((Node)spacer, (Priority)Priority.ALWAYS);
+        title.setStyle("-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;");
+        Label subtitle = new Label("Generate and download institutional academic reports.");
+        subtitle.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
+        titleBox.getChildren().addAll(title, subtitle);
+        Region headerSpacer = new Region(); HBox.setHgrow(headerSpacer, Priority.ALWAYS);
+        
         Label exportIcon = new Label("\ud83d\udce4");
-        exportIcon.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 20px;");
-        header.getChildren().addAll((Object[])new Node[]{backIcon, title, spacer, exportIcon});
-        VBox exportBox = new VBox(15.0);
-        exportBox.getStyleClass().add((Object)"export-container");
-        exportBox.setAlignment(Pos.CENTER);
+        exportIcon.setStyle("-fx-text-fill: " + App.getAccentColor() + "; -fx-font-size: 24px;");
+        header.getChildren().addAll(titleBox, headerSpacer, exportIcon);
+
+        VBox exportSection = new VBox(25);
+        exportSection.setAlignment(Pos.CENTER);
+        exportSection.setStyle("-fx-background-color: #1a1a1a; -fx-padding: 60px; -fx-background-radius: 20px; -fx-border-color: #262626; -fx-max-width: 800px;");
+        
         Label boxTitle = new Label("Weekly Certification Report");
-        boxTitle.getStyleClass().add((Object)"export-title");
-        Label boxSubtitle = new Label("Includes all student NOC evaluations, status updates, and summary metrics for the current week. Format: PDF.");
-        boxSubtitle.getStyleClass().add((Object)"export-subtitle");
+        boxTitle.setStyle("-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;");
+        
+        Label boxSubtitle = new Label("This comprehensive report includes all student NOC evaluations, status updates, and summary metrics for the current week.\n\nFile format: Portable Document Format (PDF)\nGenerated by: Institutional Node Alpha-1");
+        boxSubtitle.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-line-spacing: 5px;");
         boxSubtitle.setWrapText(true);
-        boxSubtitle.setAlignment(Pos.CENTER);
         boxSubtitle.setTextAlignment(TextAlignment.CENTER);
-        Button downloadBtn = new Button("Download Report");
-        downloadBtn.getStyleClass().add((Object)"export-btn");
+        
+        Button downloadBtn = new Button("Download System Report");
+        downloadBtn.setStyle("-fx-background-color: " + App.getAccentColor() + "; -fx-text-fill: #121212; -fx-padding: 12px; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;");
         downloadBtn.setOnAction(e -> {
             System.out.println("Triggering 'Export Weekly Report' download...");
             App.showTeacherHome();
         });
-        exportBox.getChildren().addAll((Object[])new Node[]{boxTitle, boxSubtitle, downloadBtn});
-        VBox contentContainer = new VBox(40.0);
-        contentContainer.setAlignment(Pos.TOP_CENTER);
-        contentContainer.getChildren().addAll((Object[])new Node[]{header, exportBox});
-        VBox.setVgrow((Node)contentContainer, (Priority)Priority.ALWAYS);
-        container.getChildren().add((Object)contentContainer);
-        this.view.getChildren().add((Object)container);
+        
+        exportSection.getChildren().addAll(boxTitle, boxSubtitle, downloadBtn);
+
+        StackPane centeredExport = new StackPane(exportSection);
+        VBox.setVgrow(centeredExport, Priority.ALWAYS);
+
+        mainContainer.getChildren().addAll(header, centeredExport);
+        
+        this.view.setCenter(mainContainer);
     }
 
-    public VBox getView() {
-        return this.view;
+    private HBox createSidebarItem(String iconStr, String text, boolean active, Runnable action) {
+        HBox item = new HBox(12);
+        item.setAlignment(Pos.CENTER_LEFT);
+        item.getStyleClass().add(active ? "sidebar-nav-item-active" : "sidebar-nav-item");
+        Label icon = new Label(iconStr); icon.getStyleClass().add("sidebar-icon");
+        Label txt = new Label(text); txt.getStyleClass().add("sidebar-text");
+        item.getChildren().addAll(icon, txt);
+        item.setOnMouseClicked(e -> action.run());
+        return item;
     }
+
+    public BorderPane getView() { return this.view; }
 }

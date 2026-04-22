@@ -1,235 +1,259 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  javafx.geometry.Insets
- *  javafx.geometry.Pos
- *  javafx.scene.Cursor
- *  javafx.scene.Node
- *  javafx.scene.control.Label
- *  javafx.scene.control.ScrollPane
- *  javafx.scene.control.ScrollPane$ScrollBarPolicy
- *  javafx.scene.image.Image
- *  javafx.scene.image.ImageView
- *  javafx.scene.layout.HBox
- *  javafx.scene.layout.Priority
- *  javafx.scene.layout.Region
- *  javafx.scene.layout.VBox
- *  javafx.scene.shape.Circle
- */
 package com.certiflow;
 
-import com.certiflow.App;
-import java.io.InputStream;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class TeacherHomeView {
-    private VBox view = new VBox();
+    private BorderPane view = new BorderPane();
 
     public TeacherHomeView() {
-        ImageView titleNode;
-        this.view.setAlignment(Pos.CENTER);
-        this.view.getStyleClass().add((Object)"dashboard-bg");
-        VBox container = new VBox(20.0);
-        container.getStyleClass().add((Object)"dashboard-container");
-        container.setMaxWidth(480.0);
-        container.setPadding(new Insets(20.0));
-        HBox topHeader = new HBox(15.0);
-        topHeader.setAlignment(Pos.CENTER_LEFT);
-        InputStream logoStream = this.getClass().getResourceAsStream("/logo.png");
-        if (logoStream != null) {
-            ImageView logoView = new ImageView(new Image(logoStream));
-            logoView.setFitHeight(35.0);
-            logoView.setPreserveRatio(true);
-            titleNode = logoView;
-        } else {
-            HBox fallbackBox = new HBox(8.0);
-            fallbackBox.setAlignment(Pos.CENTER_LEFT);
-            Label logoIconBox = new Label("\u2611");
-            logoIconBox.getStyleClass().add((Object)"logo-icon");
-            Label appName = new Label("Certiflow");
-            appName.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 18px;");
-            fallbackBox.getChildren().addAll((Object[])new Node[]{logoIconBox, appName});
-            titleNode = fallbackBox;
-        }
-        Region spacer = new Region();
-        HBox.setHgrow((Node)spacer, (Priority)Priority.ALWAYS);
-        Label bellIcon = new Label("\ud83d\udd14");
-        bellIcon.getStyleClass().add((Object)"bell-icon");
-        Circle profilePic = new Circle(15.0);
-        profilePic.setStyle("-fx-fill: #fac736;");
-        topHeader.getChildren().addAll((Object[])new Node[]{titleNode, spacer, bellIcon, profilePic});
-        VBox welcomeSection = new VBox(5.0);
-        welcomeSection.setPadding(new Insets(20.0, 0.0, 10.0, 0.0));
-        Label welcomeText = new Label("Welcome back,");
-        welcomeText.setStyle("-fx-text-fill: white; -fx-font-size: 28px; -fx-font-weight: bold;");
-        Label nameText = new Label("Professor Sarah");
-        nameText.setStyle("-fx-text-fill: #fac736; -fx-font-size: 28px; -fx-font-weight: bold;");
-        Label subText = new Label("Manage your student certifications and\npending validations.");
-        subText.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 14px;");
-        welcomeSection.getChildren().addAll((Object[])new Node[]{welcomeText, nameText, subText});
-        HBox summaryCards = new HBox(15.0);
-        VBox pendingCard = this.createSummaryCard("\ud83d\udccb", "Pending Today", "12", "+5%", true);
-        VBox totalCard = this.createSummaryCard("\u2611", "Weekly Total", "148", "+12%", true);
-        HBox.setHgrow((Node)pendingCard, (Priority)Priority.ALWAYS);
-        HBox.setHgrow((Node)totalCard, (Priority)Priority.ALWAYS);
-        summaryCards.getChildren().addAll((Object[])new Node[]{pendingCard, totalCard});
-        VBox quickActions = new VBox(15.0);
-        quickActions.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
-        Label quickActionTitle = new Label("Quick Actions");
-        quickActionTitle.getStyleClass().add((Object)"section-title");
-        HBox action1 = this.createQuickAction("\ud83d\udcbb", "Validate New Request", true);
-        action1.setCursor(Cursor.HAND);
-        action1.setOnMouseClicked(e -> App.showTeacherDashboard());
-        HBox action2 = this.createQuickAction("\ud83d\udc65", "View Student List", false);
-        action2.setCursor(Cursor.HAND);
-        action2.setOnMouseClicked(e -> App.showTeacherStudentList());
-        HBox action3 = this.createQuickAction("\ud83d\udcca", "Export Weekly Report", false);
-        action3.setCursor(Cursor.HAND);
-        action3.setOnMouseClicked(e -> App.showTeacherReportExport());
-        quickActions.getChildren().addAll((Object[])new Node[]{quickActionTitle, action1, action2, action3});
-        VBox recentActivity = new VBox(15.0);
-        recentActivity.setPadding(new Insets(10.0, 0.0, 0.0, 0.0));
-        HBox recentHeader = new HBox();
-        recentHeader.setAlignment(Pos.CENTER_LEFT);
-        Label recTitle = new Label("Recent Activity");
-        recTitle.getStyleClass().add((Object)"section-title");
-        Region recSpacer = new Region();
-        HBox.setHgrow((Node)recSpacer, (Priority)Priority.ALWAYS);
-        Label viewAll = new Label("View All");
-        viewAll.getStyleClass().add((Object)"view-all-text");
-        viewAll.setCursor(Cursor.HAND);
-        viewAll.setOnMouseClicked(e -> App.showTeacherHistory());
-        recentHeader.getChildren().addAll((Object[])new Node[]{recTitle, recSpacer, viewAll});
-        VBox activity1 = this.createActivityCard("MJ", "Marcus Johnson", "B.Sc Computer Science \u2022 Level 3", "PENDING", "2m ago");
-        VBox activity2 = this.createActivityCard("ER", "Elena Rodriguez", "M.A. Digital Arts \u2022 Level 1", "APPROVED", "1h ago");
-        recentActivity.getChildren().addAll((Object[])new Node[]{recentHeader, activity1, activity2});
-        VBox scrollContent = new VBox(20.0);
-        scrollContent.setPadding(new Insets(10.0, 0.0, 10.0, 0.0));
-        scrollContent.getChildren().addAll((Object[])new Node[]{topHeader, welcomeSection, summaryCards, quickActions, recentActivity});
-        ScrollPane scrollPane = new ScrollPane((Node)scrollContent);
-        scrollPane.setFitToWidth(true);
-        scrollPane.getStyleClass().add((Object)"dashboard-scroll-pane");
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        VBox scrollContentContainer = new VBox(new Node[]{scrollPane});
-        VBox.setVgrow((Node)scrollContentContainer, (Priority)Priority.ALWAYS);
-        HBox bottomNav = new HBox();
-        bottomNav.getStyleClass().add((Object)"bottom-nav");
-        bottomNav.setAlignment(Pos.CENTER);
-        VBox homeNav = this.createNavItem("\ud83c\udfe0", "Home", true);
-        VBox reqNav = this.createNavItem("\ud83d\udccb", "Requests", false);
-        reqNav.setOnMouseClicked(e -> App.showTeacherDashboard());
-        VBox histNav = this.createNavItem("\u23f2", "History", false);
-        histNav.setOnMouseClicked(e -> App.showTeacherHistory());
-        VBox profNav = this.createNavItem("\ud83d\udc64", "Profile", false);
-        profNav.setOnMouseClicked(e -> App.showTeacherProfile());
-        bottomNav.getChildren().addAll((Object[])new Node[]{homeNav, this.createSpacer(), reqNav, this.createSpacer(), histNav, this.createSpacer(), profNav});
-        container.getChildren().addAll((Object[])new Node[]{scrollContentContainer, bottomNav});
-        this.view.getChildren().add((Object)container);
-    }
+        this.view.getStyleClass().add("desktop-root");
 
-    private Region createSpacer() {
-        Region r = new Region();
-        HBox.setHgrow((Node)r, (Priority)Priority.ALWAYS);
-        return r;
-    }
+        // --- Left Sidebar ---
+        VBox sidebar = new VBox(10);
+        sidebar.getStyleClass().add("sidebar");
+        Node brand = App.getSidebarBranding();
+        brand.setStyle("-fx-text-fill: " + App.getAccentColor() + "; -fx-font-weight: 900; -fx-font-size: 20px; -fx-padding: 0 0 30px 10px;");
+        
+        VBox navItems = new VBox(5);
+        navItems.getChildren().addAll(
+            createSidebarItem("\ud83c\udfe0", "Home Overview", true, () -> App.showTeacherHome()),
+            createSidebarItem("\ud83d\udccb", "Pending Validations", false, () -> App.showTeacherDashboard()),
+            createSidebarItem("\u23f2", "Action History", false, () -> App.showTeacherHistory()),
+            createSidebarItem("\ud83d\udc65", "Student Roster", false, () -> App.showTeacherStudentList()),
+            createSidebarItem("\ud83d\udcac", "Direct Messaging", false, () -> App.showTeacherMessaging()),
+            createSidebarItem("\ud83d\udc64", "Teacher Profile", false, () -> App.showTeacherProfile())
+        );
+        Region sideSpacer = new Region(); VBox.setVgrow(sideSpacer, Priority.ALWAYS);
+        Label logoutBtn = new Label("\u23fb Logout Session");
+        logoutBtn.setStyle("-fx-text-fill: #6b7280; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 10px;");
+        logoutBtn.setOnMouseClicked(e -> App.showOptionView());
+        sidebar.getChildren().addAll(brand, navItems, sideSpacer, logoutBtn);
+        this.view.setLeft(sidebar);
 
-    private VBox createSummaryCard(String iconStr, String title, String number, String trend, boolean positive) {
-        VBox card = new VBox(10.0);
-        card.getStyleClass().add((Object)"summary-card");
-        HBox header = new HBox(5.0);
+        // --- Main Content ---
+        VBox mainContainer = new VBox(30);
+        mainContainer.getStyleClass().add("main-stage");
+        
+        // Header
+        HBox header = new HBox();
         header.setAlignment(Pos.CENTER_LEFT);
-        Label icon = new Label(iconStr);
-        icon.setStyle("-fx-text-fill: #fac736;");
-        Label titleLbl = new Label(title);
-        titleLbl.setStyle("-fx-text-fill: #666666; -fx-font-weight: bold; -fx-font-size: 12px;");
-        header.getChildren().addAll((Object[])new Node[]{icon, titleLbl});
-        Label numLbl = new Label(number);
-        numLbl.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #121212;");
-        HBox trendBox = new HBox(5.0);
-        trendBox.setAlignment(Pos.CENTER_LEFT);
-        Label arrow = new Label(positive ? "\u2197" : "\u2198");
-        arrow.setStyle(positive ? "-fx-text-fill: #2dd4bf;" : "-fx-text-fill: #ff4d4f;");
-        Label trendLbl = new Label(trend);
-        trendLbl.setStyle(positive ? "-fx-text-fill: #2dd4bf; -fx-font-weight: bold; -fx-font-size: 12px;" : "-fx-text-fill: #ff4d4f; -fx-font-weight: bold; -fx-font-size: 12px;");
-        trendBox.getChildren().addAll((Object[])new Node[]{arrow, trendLbl});
-        card.getChildren().addAll((Object[])new Node[]{header, numLbl, trendBox});
+        VBox welcomeBox = new VBox(2);
+        Label welcome = new Label("Welcome back, Professor Sarah");
+        welcome.setStyle("-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;");
+        Label subT = new Label("Manage your student certifications and pending validations.");
+        subT.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
+        welcomeBox.getChildren().addAll(welcome, subT);
+        Region headerSpacer = new Region(); HBox.setHgrow(headerSpacer, Priority.ALWAYS);
+        javafx.scene.Node topAvatar = App.getCurrentUserAvatar(32);
+        topAvatar.setStyle("-fx-cursor: hand;");
+        topAvatar.setOnMouseClicked(e -> App.showTeacherProfile());
+        // Search
+        HBox desktopSearch = new HBox(10);
+        desktopSearch.setAlignment(Pos.CENTER_LEFT);
+        desktopSearch.setStyle("-fx-background-color: #1a1a1a; -fx-background-radius: 8px; -fx-padding: 8px 15px; -fx-min-width: 300px;");
+        Label sIcon = new Label("\ud83d\udd0d"); sIcon.setStyle("-fx-text-fill: #6b7280;");
+        javafx.scene.control.TextField sInput = new javafx.scene.control.TextField();
+        sInput.setPromptText("Search Students...");
+        sInput.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-prompt-text-fill: #444;");
+        desktopSearch.getChildren().addAll(sIcon, sInput);
+
+        Label notifIcon = new Label("\ud83d\udd14");
+        notifIcon.setStyle("-fx-text-fill: #fac736; -fx-font-size: 18px; -fx-cursor: hand; -fx-padding: 0 15px 0 0;");
+        notifIcon.setOnMouseClicked(e -> App.showNotificationPopup(notifIcon));
+
+        header.getChildren().addAll(welcomeBox, headerSpacer, notifIcon, desktopSearch, topAvatar);
+
+        // Summary Grid
+        int pendingCount = App.getAllPendingTasks().size();
+        int actionedCount = App.actionHistory.size();
+
+        HBox summaryRow = new HBox(25);
+        summaryRow.getChildren().addAll(
+            createSummaryCard("\ud83d\udccb", "Pending Tasks", String.valueOf(pendingCount), "Currently Active", true),
+            createSummaryCard("\u2611", "Actioned Total", String.valueOf(actionedCount), "Verified records", true)
+        );
+        for(Node n : summaryRow.getChildren()) HBox.setHgrow(n, Priority.ALWAYS);
+
+        // Grid Content
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("desktop-dashboard-grid");
+        
+        // Left: Quick Actions
+        VBox leftCol = new VBox(20);
+        GridPane.setHgrow(leftCol, Priority.ALWAYS);
+        Label qaTitle = new Label("QUICK ACTIONS");
+        qaTitle.setStyle("-fx-text-fill: #fac736; -fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;");
+        
+        HBox action1 = createDesktopAction("\ud83d\udcbb", "Validate New Request", true, () -> App.showTeacherDashboard());
+        HBox action2 = createDesktopAction("\ud83d\udc65", "View Student List", false, () -> App.showTeacherStudentList());
+        HBox action3 = createDesktopAction("\ud83d\udcca", "Export Weekly Report", false, () -> App.showTeacherReportExport());
+        leftCol.getChildren().addAll(qaTitle, action1, action2, action3);
+        
+        // Right: Recent Activity / Search
+        VBox rightCol = new VBox(20);
+        rightCol.setMinWidth(450);
+        Label raTitle = new Label("ACTIVITY & DISCOVERY");
+        raTitle.setStyle("-fx-text-fill: #fac736; -fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;");
+        
+        VBox activities = new VBox(12);
+        
+        javafx.scene.control.ContextMenu suggestions = new javafx.scene.control.ContextMenu();
+        
+        sInput.textProperty().addListener((obs, oldV, newV) -> {
+            renderActiveDiscovery(activities, newV.trim().toLowerCase());
+            
+            suggestions.getItems().clear();
+            if (newV.trim().length() > 0) {
+                String q = newV.trim().toLowerCase();
+                for (App.StudentProfile s : App.studentDB.values()) {
+                    if (s.name.toLowerCase().contains(q) || s.studentId.toLowerCase().contains(q)) {
+                        javafx.scene.control.MenuItem item = new javafx.scene.control.MenuItem("\ud83c\udf93 " + s.name + " (" + s.major + ")");
+                        item.setOnAction(e -> App.showForeignProfile(s.name));
+                        suggestions.getItems().add(item);
+                    }
+                }
+                if (!suggestions.getItems().isEmpty()) {
+                    if (!suggestions.isShowing()) suggestions.show(sInput, javafx.geometry.Side.BOTTOM, 0, 0);
+                } else {
+                    suggestions.hide();
+                }
+            } else {
+                suggestions.hide();
+            }
+        });
+
+        renderActiveDiscovery(activities, "");
+        
+        rightCol.getChildren().addAll(raTitle, activities);
+
+        grid.add(leftCol, 0, 0);
+        grid.add(rightCol, 1, 0);
+
+        mainContainer.getChildren().addAll(header, summaryRow, grid);
+        
+        ScrollPane scrollPane = new ScrollPane(mainContainer);
+        scrollPane.setFitToWidth(true);
+        this.view.setCenter(scrollPane);
+    }
+
+    private HBox createSidebarItem(String iconStr, String text, boolean active, Runnable action) {
+        HBox item = new HBox(12);
+        item.setAlignment(Pos.CENTER_LEFT);
+        item.getStyleClass().add(active ? "sidebar-nav-item-active" : "sidebar-nav-item");
+        Label icon = new Label(iconStr); icon.getStyleClass().add("sidebar-icon");
+        Label txt = new Label(text); txt.getStyleClass().add("sidebar-text");
+        item.getChildren().addAll(icon, txt);
+        item.setOnMouseClicked(e -> action.run());
+        return item;
+    }
+
+    private VBox createSummaryCard(String iconStr, String title, String val, String trend, boolean pos) {
+        VBox card = new VBox(10);
+        card.setStyle("-fx-background-color: #1a1a1a; -fx-padding: 25px; -fx-background-radius: 12px; -fx-border-color: rgba(255,255,255,0.05);");
+        
+        HBox top = new HBox(10);
+        top.setAlignment(Pos.CENTER_LEFT);
+        Label i = new Label(iconStr); i.setStyle("-fx-text-fill: #fac736; -fx-font-size: 16px;");
+        Label t = new Label(title); t.setStyle("-fx-text-fill: #64748b; -fx-font-size: 11px; -fx-font-weight: bold;");
+        top.getChildren().addAll(i, t);
+        
+        Label v = new Label(val); v.setStyle("-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: 800;");
+        
+        Label tr = new Label((pos ? "\u2197 " : "\u2198 ") + trend);
+        tr.setStyle("-fx-text-fill: " + (pos ? "#2dd4bf" : "#ef4444") + "; -fx-font-size: 11px; -fx-font-weight: bold;");
+        
+        card.getChildren().addAll(top, v, tr);
         return card;
     }
 
-    private HBox createQuickAction(String iconStr, String text, boolean isPrimary) {
-        HBox action = new HBox(15.0);
-        action.setAlignment(Pos.CENTER_LEFT);
-        action.getStyleClass().add((Object)(isPrimary ? "quick-action-primary" : "quick-action-secondary"));
+    private HBox createDesktopAction(String iconStr, String text, boolean primary, Runnable action) {
+        HBox row = new HBox(15);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color: " + (primary ? "#fac736" : "#1a1a1a") + "; -fx-padding: 20px; -fx-background-radius: 12px; -fx-cursor: hand;");
+        
         Label icon = new Label(iconStr);
-        icon.setStyle(isPrimary ? "-fx-text-fill: #121212; -fx-font-size: 20px;" : "-fx-text-fill: #fac736; -fx-font-size: 20px;");
-        Label textLbl = new Label(text);
-        textLbl.setStyle(isPrimary ? "-fx-text-fill: #121212; -fx-font-weight: bold; -fx-font-size: 14px;" : "-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
-        Region spacer = new Region();
-        HBox.setHgrow((Node)spacer, (Priority)Priority.ALWAYS);
-        Label arrow = new Label("\u276f");
-        arrow.setStyle(isPrimary ? "-fx-text-fill: #121212;" : "-fx-text-fill: white;");
-        action.getChildren().addAll((Object[])new Node[]{icon, textLbl, spacer, arrow});
-        return action;
+        icon.setStyle("-fx-text-fill: " + (primary ? "#121212" : "#fac736") + "; -fx-font-size: 20px;");
+        
+        Label txt = new Label(text);
+        txt.setStyle("-fx-text-fill: " + (primary ? "#121212" : "#ffffff") + "; -fx-font-weight: bold; -fx-font-size: 15px;");
+        
+        Region s = new Region(); HBox.setHgrow(s, Priority.ALWAYS);
+        Label arrow = new Label("\u276f"); arrow.setStyle("-fx-text-fill: " + (primary ? "#121212" : "#333") + ";");
+        
+        row.getChildren().addAll(icon, txt, s, arrow);
+        row.setOnMouseClicked(e -> action.run());
+        return row;
     }
 
-    private VBox createActivityCard(String initials, String name, String details, String status, String time) {
-        VBox card = new VBox();
-        card.getStyleClass().add((Object)"activity-card");
-        HBox content = new HBox(15.0);
-        content.setAlignment(Pos.CENTER_LEFT);
-        Label avatar = new Label(initials);
-        avatar.getStyleClass().add((Object)"activity-avatar");
-        VBox infoBox = new VBox(2.0);
-        Label nameLbl = new Label(name);
-        nameLbl.setStyle("-fx-text-fill: #121212; -fx-font-weight: bold; -fx-font-size: 14px;");
-        Label detailsLbl = new Label(details);
-        detailsLbl.setStyle("-fx-text-fill: #666666; -fx-font-size: 12px;");
-        infoBox.getChildren().addAll((Object[])new Node[]{nameLbl, detailsLbl});
-        Region spacer = new Region();
-        HBox.setHgrow((Node)spacer, (Priority)Priority.ALWAYS);
-        VBox statusBox = new VBox(5.0);
-        statusBox.setAlignment(Pos.TOP_RIGHT);
-        Label statusLbl = new Label(status);
-        if (status.equals("PENDING")) {
-            statusLbl.getStyleClass().addAll((Object[])new String[]{"status-pill", "pill-review"});
-        } else {
-            statusLbl.getStyleClass().addAll((Object[])new String[]{"status-pill", "pill-accepted"});
+    private void renderActiveDiscovery(VBox container, String query) {
+        container.getChildren().clear();
+        
+        if (query.isEmpty()) {
+            // Default "Recent Activity" for teachers can be hardcoded or from action history
+            container.getChildren().addAll(
+                createDesktopActivityRow("MJ", "Marcus Johnson", "B.Sc Computer Science \u2022 Level 3", "PENDING", "2m ago", () -> App.showForeignProfile("Marcus Johnson")),
+                createDesktopActivityRow("ER", "Elena Rodriguez", "M.A. Digital Arts \u2022 Level 1", "APPROVED", "1h ago", () -> App.showForeignProfile("Elena Rodriguez"))
+            );
+            return;
         }
-        Label timeLbl = new Label(time);
-        timeLbl.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 10px;");
-        statusBox.getChildren().addAll((Object[])new Node[]{statusLbl, timeLbl});
-        content.getChildren().addAll((Object[])new Node[]{avatar, infoBox, spacer, statusBox});
-        card.getChildren().add((Object)content);
-        return card;
+
+        // Active Discovery (Search Students)
+        boolean found = false;
+        for (App.StudentProfile s : App.studentDB.values()) {
+            if (s.name.toLowerCase().contains(query) || s.studentId.toLowerCase().contains(query)) {
+                container.getChildren().add(createDesktopActivityRow(App.getInitials(s.name), s.name, s.major, "STUDENT", "Record", () -> App.showForeignProfile(s.name)));
+                found = true;
+            }
+        }
+
+        if (!found) {
+            Label noRes = new Label("No student profiles match '" + query + "'");
+            noRes.setStyle("-fx-text-fill: #4b5563; -fx-font-size: 13px; -fx-padding: 10px;");
+            container.getChildren().add(noRes);
+        }
     }
 
-    private VBox createNavItem(String emoji, String text, boolean active) {
-        VBox box = new VBox(5.0);
-        box.setAlignment(Pos.CENTER);
-        box.setCursor(Cursor.HAND);
-        Label icon = new Label(emoji);
-        icon.getStyleClass().add((Object)(active ? "nav-icon-active" : "nav-icon"));
-        Label lbl = new Label(text);
-        lbl.getStyleClass().add((Object)(active ? "nav-text-active" : "nav-text"));
-        box.getChildren().addAll((Object[])new Node[]{icon, lbl});
-        return box;
+    private HBox createDesktopActivityRow(String initials, String name, String details, String status, String time, Runnable action) {
+        HBox row = new HBox(15);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setStyle("-fx-background-color: #1a1a1a; -fx-padding: 15px; -fx-background-radius: 10px; -fx-cursor: hand;");
+        row.setOnMouseClicked(e -> action.run());
+        
+        App.StudentProfile sp = App.studentDB.get(name);
+        String path = (sp != null) ? sp.profilePicPath : null;
+        javafx.scene.Node av = App.getAvatarNode(name, path, 45);
+        
+        VBox info = new VBox(2);
+        Label nm = new Label(name); nm.setStyle("-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;");
+        Label dt = new Label(details); dt.setStyle("-fx-text-fill: #64748b; -fx-font-size: 11px;");
+        info.getChildren().addAll(nm, dt);
+        
+        Region s = new Region(); HBox.setHgrow(s, Priority.ALWAYS);
+        
+        VBox statusBox = new VBox(2);
+        statusBox.setAlignment(Pos.CENTER_RIGHT);
+        Label st = new Label(status);
+        st.setStyle("-fx-background-color: " + (status.equals("APPROVED") ? "rgba(45,212,191,0.1)" : "rgba(250,199,54,0.1)") + "; -fx-text-fill: " + (status.equals("APPROVED") ? "#2dd4bf" : "#fac736") + "; -fx-padding: 4px 10px; -fx-background-radius: 10px; -fx-font-size: 10px; -fx-font-weight: bold;");
+        Label tm = new Label(time); tm.setStyle("-fx-text-fill: #444; -fx-font-size: 10px;");
+        statusBox.getChildren().addAll(st, tm);
+        
+        row.getChildren().addAll(av, info, s, statusBox);
+        return row;
     }
 
-    public VBox getView() {
-        return this.view;
-    }
+    public BorderPane getView() { return this.view; }
 }
